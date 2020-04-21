@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script  type="text/javascript" src="../js/vue-2.4.0.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="button" value="巨浪1" v-on:click="julang1">
+        <input type="button" value="巨浪2" @click="julang2">
+        <input type="button" value="巨浪3" @click="julang3">
+        <input type="button" value="巨浪4" @click="julang4">
+        <input type="button" value="停止" @click="stop">
+        <h4>{{msg}}</h4>
+    </div>
+    <script >
+        //this代表当前vm实例 this.属性/方法名
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                msg: '猥琐发育，别浪~',
+                intervalId: null //定时器ID，每次开启一个定时器，都有一个ID
+            },
+            methods:{
+                julang1: function () {
+                    //浪起来业务代码：1.拿到字符串并截取，字符串第一个字符截取出来放到最后一个位置； 2实现自动截取，定时器
+                    var start = this.msg.substring(0,1);
+                    var end = this.msg.substring(1);
+                    this.msg = end+start; //新的字符串拼接后赋值给属性
+                    //VM会监听自己的属性变换，实时刷新
+                },
+                julang2 (){
+                    var _this = this; //首先把vm的this赋值一下，否则算的是setInterval()方法的this，this指向问题
+                    setInterval(function () { //设置定时任务，
+                        var start = _this.msg.substring(0,1);
+                        var end = _this.msg.substring(1);
+                        _this.msg = end+start //新的字符串拼接后赋值给属性
+                    },400)
+                },
+                julang3 () {
+                    setInterval( () => { // => 箭头函数解决this指向问题
+                        var start = this.msg.substring(0,1);
+                        var end = this.msg.substring(1);
+                        this.msg = end+start; //新的字符串拼接后赋值给属性
+                    },400)
+                },
+                julang4 (){
+                    if(  this.intervalId != null ) return; //注意定时器ID
+                    this.intervalId = setInterval( () => { // => 箭头函数解决this指向问题
+                        var start = this.msg.substring(0,1);
+                        var end = this.msg.substring(1);
+                        this.msg = end+start //新的字符串拼接后赋值给属性
+                    },400)
+                },
+                stop (){
+                    clearInterval(this.intervalId);
+                    //清除定时器Id后，需要再次设置为null
+                    this.intervalId = null;
+                },
+            }
+
+        })
+
+
+    </script>
+
+
+
+</body>
+</html>
